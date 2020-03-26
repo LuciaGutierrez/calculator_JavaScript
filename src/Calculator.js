@@ -6,9 +6,6 @@ export class Calculator extends Component {
         this.state = {
             operation: "",
             result: "",
-            operandIsPresent: false,
-            isNegative: false
-
         }
     }
 
@@ -16,26 +13,21 @@ export class Calculator extends Component {
         e.preventDefault();
         console.log(number);
         this.setState({ operation: this.state.operation + number });
-        this.setState({operandIsPresent:false, isNegative:false});
-
     }
 
     _handleButtonOperator = (e, operator) => {
         e.preventDefault();
-        this.setState({operation: this.state.operation + operator});
-
+        this.setState({ operation: this.state.operation + operator });
     }
 
     _handleButtonEquals = (e, symbol) => {
-        if (this.state.operandIsPresent === false) {
-            let aux = evaluateOperation(this.state.operation);
-            if (aux === -1){
-                this.setState({operation: this.state.operation, result: "Not a valid expresion"});
-            }
-            else{
-            this.setState({ result: this.state.operation + symbol + aux });
-            this.setState({ operation: aux })
-            }
+        e.preventDefault();
+        let aux = evaluateOperation(this.state.operation);
+        if (aux === -1) {
+            this.setState({ operation: this.state.operation, result: "Not a valid expresion" });
+        }
+        else {
+            this.setState({ result: this.state.operation + symbol + aux, operation: aux });
         }
     }
 
@@ -49,7 +41,6 @@ export class Calculator extends Component {
             : this.setState({ operation: "" })
     }
 
-
     _handleButtonDecimal = (e, symbol) => {
         this.setState({ operation: this.state.operation + symbol });
     }
@@ -58,16 +49,14 @@ export class Calculator extends Component {
         return (
             <div className='calculatorDisplay' >
                 <div className='resultsDisplay' >
-
                     <h3 className='results' > {this.state.result} </h3>
                     <h3 className='operation'> {this.state.operation}</h3>
-
                 </div>
                 <div className='buttons' >
 
                     {numbers.map(number =>
                         <button className={number.value}
-                            key={number.key}
+                            key={number.id}
                             onClick={
                                 (e) => this._handleButtonNumber(e, number.value)} >
                             {number.value}
@@ -75,14 +64,13 @@ export class Calculator extends Component {
                     )
                     }
                     {operators.map(operator =>
-                        <button className={operator.key}
-                            key={operator.key}
+                        <button className={operator.id}
+                            key={operator.id}
                             onClick={
                                 (e) => this._handleButtonOperator(e, operator.value)} > {operator.value}
                         </button>
                     )
                     }
-
                     <button className={equals.id}
                         onClick={
                             (e) => this._handleButtonEquals(e, equals.value)} >
@@ -116,23 +104,23 @@ export class Calculator extends Component {
 }
 
 let numbers = [
-    { value: 7, id: "seven", key: "seven" },
-    { value: 8, id: "eight", key: "eight" },
-    { value: 9, id: "nine", key: "nine" },
-    { value: 4, id: "four", key: "four" },
-    { value: 5, id: "five", key: "five" },
-    { value: 6, id: "six", key: "six" },
-    { value: 1, id: "one", key: "one" },
-    { value: 2, id: "two", key: "two" },
-    { value: 3, id: "three", key: "three" },
-    { value: 0, id: "zero", key: "zero" }
+    { value: 7, id: "seven" },
+    { value: 8, id: "eight" },
+    { value: 9, id: "nine" },
+    { value: 4, id: "four" },
+    { value: 5, id: "five" },
+    { value: 6, id: "six", },
+    { value: 1, id: "one" },
+    { value: 2, id: "two" },
+    { value: 3, id: "three" },
+    { value: 0, id: "zero" }
 ];
 
 let operators = [
-    { value: "+", id: "sum", key: "sum" },
-    { value: "-", id: "substraction", key: "substraction" },
-    { value: "*", id: "multiplication", key: "multiplication" },
-    { value: "/", id: "division", key: "division" }
+    { value: "+", id: "sum" },
+    { value: "-", id: "substraction" },
+    { value: "*", id: "multiplication" },
+    { value: "/", id: "division" }
 ];
 
 let clear = { value: "AC", id: "clear" };
@@ -141,22 +129,11 @@ let equals = { value: "=", id: "equals" };
 let decimal = { value: ".", id: "decimal" };
 
 function evaluateOperation(operation) {
-    //console.log(operation);
-    //let operationReduced =  operation.replace(/[+*-/]{2,}/g, controlNegatives(operation));
-    //let result = eval(operationReduced);
     let result = "";
     try {
         result = eval(operation)
-
     } catch (err) {
         result = -1;
     }
     return result;
 }
-
-function controlNegatives(operation) {
-    let last = operation[operation.length - 1];
-    if ( last === "-" )
-      return operation[operation.length - 2] + last;
-    return last;
-  }

@@ -5,9 +5,7 @@ import {Calculator}from './Calculator.js';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Calculator />
-  </React.StrictMode>,
+    <Calculator />,
   document.getElementById('root')
 );
 

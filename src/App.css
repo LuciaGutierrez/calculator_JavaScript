@@ -99,7 +99,6 @@ button:focus {
     outline: none;
 }
 
-
 /*Desplaza el botón para simular el click*/
 
 button:active {
@@ -120,6 +119,7 @@ button:active {
     grid-column: 1/3;
     grid-row: 1;
     background: linear-gradient(to top left, var(--color-equals-light), var(--color-equals-dark));
+    font-family: Comfortaa-Bold;
 
 }
 
@@ -127,11 +127,14 @@ button:active {
     grid-column: 3;
     grid-row: 1;
     background-color: var(--color-background-doubledark);
+    font-family: Comfortaa-Bold;
+
 }
 
 .zero {
     grid-column: 1/3;
     grid-row: 5;
+    
 }
 
 .division {
@@ -170,4 +173,6 @@ button:active {
     grid-column: 3;
     grid-row: 5;
     background: linear-gradient(to top left, var(--color-equals-light), var(--color-equals-dark));
+    font-family: Comfortaa-Bold;
+
 }
