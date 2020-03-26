@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
- export class Calculator extends Component {
+export class Calculator extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,35 +16,27 @@ import React, { Component } from 'react';
         e.preventDefault();
         console.log(number);
         this.setState({ operation: this.state.operation + number });
-        this.setState({ operandIsPresent: false, isNegative: false});
+        this.setState({operandIsPresent:false, isNegative:false});
 
     }
 
     _handleButtonOperator = (e, operator) => {
         e.preventDefault();
-        let lastElement = this.state.operation.slice(this.state.operation.length -1);
-        /*if (operator === "-" && this.state.isNegative === false){
-            if(["+","-","*","/"].indexOf(lastElement)>=0){
-                this.setState({operandIsPresent: false});
-                this.setState({operation: this.state.operation + operator});
-                this.setState({isNegative: true});
-            } else this.setState({ operandIsPresent: true });
-        }
-         else this.setState({ operandIsPresent: true });
-        console.log(this.state.operandIsPresent, this.state.operation, this.state.isNegative);
-        this.setState({operandIsPresent: true});
-        if (operator === "-"){
-            console.log(lastElement);
-            if (lastElement)
-        }*/
-        (this.state.operandIsPresent) ?
-            this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) + operator }) : this.setState({ operation: this.state.operation + operator});
+
+        (this.state.operandIsPresent)
+        ? (operator === "-" && this.state.isNegative === false)
+            ? this.setState({isNegative: true, operation: this.state.operation + operator, operandIsPresent:true})
+            : this.setState({operation: this.state.operation})
+
+        :this.setState({operation: this.state.operation + operator, operandIsPresent:true});
+        ;
+
     }
 
     _handleButtonEquals = (e, symbol) => {
         if (this.state.operandIsPresent === false) {
             let aux = evaluateOperation(this.state.operation);
-            this.setState({ result: this.state.operation  +symbol  + aux });
+            this.setState({ result: this.state.operation + symbol + aux });
             this.setState({ operation: aux })
         }
     }
@@ -54,11 +46,11 @@ import React, { Component } from 'react';
     }
 
     _handleButtonClearLast = (e) => {
-        (this.state.operation.length>1)
-        ? this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) })
-        : this.setState({operation: ""})
+        (this.state.operation.length >= 0)
+            ? this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) })
+            : this.setState({ operation: "" })
     }
-        
+
 
     _handleButtonDecimal = (e, symbol) => {
         this.setState({ operation: this.state.operation + symbol });
@@ -66,61 +58,61 @@ import React, { Component } from 'react';
 
     render() {
         return (
-        <div className='calculatorDisplay' >
-            <div className='resultsDisplay' >
+            <div className='calculatorDisplay' >
+                <div className='resultsDisplay' >
 
-                <h3 className='results' > {this.state.result} </h3>
-                <h3 className='operation' > {this.state.operation}</h3>
+                    <h3 className='results' > {this.state.result} </h3>
+                    <h3 className='operation' > {this.state.operation}</h3>
 
-            </div>
-            <div className='buttons' >
+                </div>
+                <div className='buttons' >
 
-                {numbers.map(number =>
-                    <button className={number.value}
-                        key={number.key}
+                    {numbers.map(number =>
+                        <button className={number.value}
+                            key={number.key}
+                            onClick={
+                                (e) => this._handleButtonNumber(e, number.value)} >
+                            {number.value}
+                        </button>
+                    )
+                    }
+                    {operators.map(operator =>
+                        <button className={operator.key}
+                            key={operator.key}
+                            onClick={
+                                (e) => this._handleButtonOperator(e, operator.value)} > {operator.value}
+                        </button>
+                    )
+                    }
+
+                    <button className={equals.id}
                         onClick={
-                            (e) => this._handleButtonNumber(e, number.value)} >
-                        {number.value}
+                            (e) => this._handleButtonEquals(e, equals.value)} >
+                        {equals.value}
                     </button>
-                )
-                }
-                {operators.map(operator =>
-                    <button className={operator.key}
-                        key={operator.key}
+
+                    <button className={decimal.id}
+                        key={decimal.id}
                         onClick={
-                            (e) => this._handleButtonOperator(e, operator.value)} > {operator.value}
+                            (e) => this._handleButtonDecimal(e, decimal.value)} >
+                        {decimal.value}
                     </button>
-                )
-                }
 
-                <button className={equals.id}
-                    onClick={
-                        (e) => this._handleButtonEquals(e, equals.value)} >
-                    {equals.value}
-                </button>
+                    < button className={clear.id}
+                        key={clear.id}
+                        onClick={
+                            (e) => this._handleButtonClear(e)} >
+                        {clear.value}
+                    </button>
 
-                <button className={decimal.id}
-                    key={decimal.id}
-                    onClick={
-                        (e) => this._handleButtonDecimal(e, decimal.value)} >
-                    {decimal.value}
-                </button>
+                    <button className={clearLast.id}
+                        key={clearLast.id}
+                        onClick={
+                            (e) => this._handleButtonClearLast(e)} > {clearLast.value}
+                    </button>
 
-                < button className={clear.id}
-                    key={clear.id}
-                    onClick={
-                        (e) => this._handleButtonClear(e)} >
-                    {clear.value}
-                </button>
-
-                <button className={clearLast.id}
-                    key={clearLast.id}
-                    onClick={
-                        (e) => this._handleButtonClearLast(e)} > {clearLast.value}
-                </button>
-
+                </div>
             </div>
-        </div>
         )
     }
 }
@@ -150,7 +142,7 @@ let clearLast = { value: "C", id: "clearLast" };
 let equals = { value: "=", id: "equals" };
 let decimal = { value: ".", id: "decimal" };
 
-function evaluateOperation(operation){
+function evaluateOperation(operation) {
 
     let result = eval(operation);
     return result;
