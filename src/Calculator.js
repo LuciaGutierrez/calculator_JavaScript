@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
-export class Calculator extends Component {
+ export class Calculator extends Component {
     constructor(props) {
         super(props);
         this.state = {
             operation: "",
             result: "",
-            operandIsPresent: false
+            operandIsPresent: false,
+            isNegative: false
 
         }
     }
@@ -15,16 +16,29 @@ export class Calculator extends Component {
         e.preventDefault();
         console.log(number);
         this.setState({ operation: this.state.operation + number });
-        this.setState({ operandIsPresent: false });
+        this.setState({ operandIsPresent: false, isNegative: false});
 
     }
 
     _handleButtonOperator = (e, operator) => {
         e.preventDefault();
-        this.setState({ operandIsPresent: true });
-        console.log(this.state.operation);
+        let lastElement = this.state.operation.slice(this.state.operation.length -1);
+        /*if (operator === "-" && this.state.isNegative === false){
+            if(["+","-","*","/"].indexOf(lastElement)>=0){
+                this.setState({operandIsPresent: false});
+                this.setState({operation: this.state.operation + operator});
+                this.setState({isNegative: true});
+            } else this.setState({ operandIsPresent: true });
+        }
+         else this.setState({ operandIsPresent: true });
+        console.log(this.state.operandIsPresent, this.state.operation, this.state.isNegative);
+        this.setState({operandIsPresent: true});
+        if (operator === "-"){
+            console.log(lastElement);
+            if (lastElement)
+        }*/
         (this.state.operandIsPresent) ?
-            this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) + operator }) : this.setState({ operation: this.state.operation + operator });
+            this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) + operator }) : this.setState({ operation: this.state.operation + operator});
     }
 
     _handleButtonEquals = (e, symbol) => {
@@ -40,8 +54,11 @@ export class Calculator extends Component {
     }
 
     _handleButtonClearLast = (e) => {
-        this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) });
+        (this.state.operation.length>1)
+        ? this.setState({ operation: this.state.operation.slice(0, this.state.operation.length - 1) })
+        : this.setState({operation: ""})
     }
+        
 
     _handleButtonDecimal = (e, symbol) => {
         this.setState({ operation: this.state.operation + symbol });
