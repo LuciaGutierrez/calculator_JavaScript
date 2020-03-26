@@ -22,22 +22,20 @@ export class Calculator extends Component {
 
     _handleButtonOperator = (e, operator) => {
         e.preventDefault();
-
-        (this.state.operandIsPresent)
-        ? (operator === "-" && this.state.isNegative === false)
-            ? this.setState({isNegative: true, operation: this.state.operation + operator, operandIsPresent:true})
-            : this.setState({operation: this.state.operation})
-
-        :this.setState({operation: this.state.operation + operator, operandIsPresent:true});
-        ;
+        this.setState({operation: this.state.operation + operator});
 
     }
 
     _handleButtonEquals = (e, symbol) => {
         if (this.state.operandIsPresent === false) {
             let aux = evaluateOperation(this.state.operation);
+            if (aux === -1){
+                this.setState({operation: this.state.operation, result: "Not a valid expresion"});
+            }
+            else{
             this.setState({ result: this.state.operation + symbol + aux });
             this.setState({ operation: aux })
+            }
         }
     }
 
@@ -62,7 +60,7 @@ export class Calculator extends Component {
                 <div className='resultsDisplay' >
 
                     <h3 className='results' > {this.state.result} </h3>
-                    <h3 className='operation' > {this.state.operation}</h3>
+                    <h3 className='operation'> {this.state.operation}</h3>
 
                 </div>
                 <div className='buttons' >
@@ -143,7 +141,22 @@ let equals = { value: "=", id: "equals" };
 let decimal = { value: ".", id: "decimal" };
 
 function evaluateOperation(operation) {
+    //console.log(operation);
+    //let operationReduced =  operation.replace(/[+*-/]{2,}/g, controlNegatives(operation));
+    //let result = eval(operationReduced);
+    let result = "";
+    try {
+        result = eval(operation)
 
-    let result = eval(operation);
+    } catch (err) {
+        result = -1;
+    }
     return result;
 }
+
+function controlNegatives(operation) {
+    let last = operation[operation.length - 1];
+    if ( last === "-" )
+      return operation[operation.length - 2] + last;
+    return last;
+  }
